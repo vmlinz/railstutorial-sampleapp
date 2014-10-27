@@ -8,4 +8,11 @@ class User < ActiveRecord::Base
     before_save { email.downcase! }
     has_secure_password
     validates :password, length: { minimum: 6 }
+    
+    # Generate a digest for the string
+    def User.digest(string)
+        cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                      BCrypt::Engine.cost
+        BCrypt::Password.create(string, cost: cost) 
+    end
 end
