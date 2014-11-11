@@ -9,6 +9,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   end
   
   test 'unsuccessful edit' do
+    log_in_as(@user)
     get edit_user_path(@user)    
     patch user_path(@user), user: { name: '',
                                     email: 'vmlinz@test.com',
@@ -17,7 +18,10 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     assert_template 'users/edit'
   end
   
-  test 'successful edit' do
+  test 'successful edit with friendly forwarding' do
+    get edit_user_path(@user)
+    log_in_as(@user)
+    assert_redirected_to edit_user_path(@user)
     get edit_user_path(@user)
     name = "foo bar"
     email = "foo@bar.com"
