@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+    has_many :microposts, dependent: :destroy
     VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
     # VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
     validates :name, presence: true, length: { maximum: 50 }
@@ -60,6 +61,10 @@ class User < ActiveRecord::Base
     
     def password_reset_expired?
         reset_sent_at < 2.hours.ago
+    end
+    
+    def feed
+        Micropost.where("user_id = ?", id)
     end
     
     private
